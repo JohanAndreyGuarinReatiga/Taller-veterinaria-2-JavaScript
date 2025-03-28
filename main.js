@@ -1,95 +1,121 @@
 let pets = [
     {
-        name: "firulai",
+        name: "Firulai",
         species: "Dog",
         age: 5,
         weight: 12,
         healthStatus: "Healthy"
     }
-    
-]
+];
 
-const register = (callback) =>{
-    let name = prompt("Type your pets name")
-    let species = prompt("Type your pets species")
-    let age = parseInt(prompt("Type your pets age"))
-    let weight = parseFloat(prompt("Type your pets weight")) 
-    let healthStatus = prompt("Type your pets health status (Healthy, In treatment or Sick)")
+const register = (callback) => {
+    let name = prompt("Type your pet's name");
+    let species = prompt("Type your pet's species");
+    let age = parseInt(prompt("Type your pet's age"));
+    let weight = parseFloat(prompt("Type your pet's weight")); 
+    let healthStatus = prompt("Type your pet's health status (Healthy, In treatment, Sick)");
 
-    pets.push({name, species, age, weight, healthStatus})
-    
-    console.log("Registering pet, please wait...")
+    console.log("Registering pet, please wait...");
+    setTimeout(() => {
+        pets.push({ name, species, age, weight, healthStatus });
+        alert("Registration successfully done");
+        callback();
+    }, 2000);
+};
 
-    setTimeout(function(){
-        alert("Registration succesfully done")
-        callback()
-    }, 2000);    
-
-}
-
-const listPet = () =>{
-    if(pets.length === 0){
-        alert("Theres no pet registered")
-        return
+const listPet = (callback) => {
+    if (pets.length === 0) {
+        alert("There's no pet registered");
+        callback();
+        return;
     }
 
-    let list = ""
+    let list = "";
     pets.forEach((p, index) => {
-        list += `${index + 1}. Name: ${p.name},\n Species: ${p.species},\n Age: ${p.age},\n Weight: ${p.weight},\n Health Status: ${p.healthStatus}\n` 
-    })  
-    alert(list)
-}
+        list += `${index + 1}. Name: ${p.name}, Species: ${p.species}, Age: ${p.age}, Weight: ${p.weight}, Health Status: ${p.healthStatus}\n\n`;
+    });
 
+    console.log("Listing pets, please wait...");
+    setTimeout(() => {
+        alert(list);
+        callback();
+    }, 2000);
+};
 
-const searchPet = () =>{
-
-    let name = prompt("Type pets name to look for");
+const searchPet = (callback) => {
+    let name = prompt("Type pet's name to look for");
     let pet = pets.find(m => m.name.toLowerCase() === name.toLowerCase());
-    if (pet) {
-        alert(`Pet found: \nName: ${pet.name}\nSpecies: ${pet.species}\nAge: ${pet.age} years\nWeight: ${pet.weight}kg\nHealth Status: ${pet.healthStatus}`);
-    } else {
-        alert("Not pet found.");
-    }
 
-}
+    console.log("Searching pet, please wait...");
+    setTimeout(() => {
+        if (pet) {
+            alert(`Pet found:\nName: ${pet.name}\nSpecies: ${pet.species}\nAge: ${pet.age} years\nWeight: ${pet.weight}kg\nHealth Status: ${pet.healthStatus}`);
+        } else {
+            alert("No pet found.");
+        }
+        callback();
+    }, 2000);
+};
 
-const updateHealthStatus = () => {
-    let name = prompt("Type pets name to update");
+const updateHealthStatus = (callback) => {
+    let name = prompt("Type pet's name to update");
     let pet = pets.find(p => p.name.toLowerCase() === name.toLowerCase());
-    if (pet) {
-        pet.healthStatus = prompt("Enter the new status (Healthy, Sick, In treatment):");
-        alert("health status succesfuly updated");
-    } else {
-        alert("Not pet found.");
-    }
-}
 
-const deletePet = () => {
-    let name = prompt("Type pets name to delete");
-    let ind = pets.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-    if (ind !== -1) {
-        pets.splice(ind, 1);
-        alert("Succesfuly deleted");
+    if (pet) {
+        let newStatus = prompt("Enter the new status (Healthy, Sick, In treatment):");
+        console.log("Updating health status, please wait...");
+        setTimeout(() => {
+            pet.healthStatus = newStatus;
+            alert("Health status successfully updated.");
+            callback();
+        }, 2000);
     } else {
-        alert("Not pet found.");
+        alert("No pet found.");
+        callback();
     }
-}
+};
+
+const deletePet = (callback) => {
+    let name = prompt("Type pet's name to delete");
+    let ind = pets.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+
+    if (ind !== -1) {
+        console.log("Deleting pet, please wait...");
+        setTimeout(() => {
+            pets.splice(ind, 1);
+            alert("Successfully deleted.");
+            callback();
+        }, 2000);
+    } else {
+        alert("No pet found.");
+        callback();
+    }
+};
+
+const exitApp = () => {
+    console.log("Closing application, please wait...");
+    setTimeout(() => {
+        alert("Application closed successfully.");
+    }, 2000);
+};
 
 const menu = () => {
     let option;
-    do {
+    const showMenu = () => {
         option = prompt("Choose an option:\n1. Register pet\n2. List \n3. Search pet\n4. Change a pet's health status \n5. Delete pet\n6. Leave");
+
         switch (option) {
-            case "1": register("function"); break;
-            case "2": listPet(); break;
-            case "3": searchPet(); break;
-            case "4": updateHealthStatus(); break;
-            case "5": deletePet(); break;
-            case "6": break;
-            default: alert("No valid option. Try again.");
+            case "1": register(showMenu); break;
+            case "2": listPet(showMenu); break;
+            case "3": searchPet(showMenu); break;
+            case "4": updateHealthStatus(showMenu); break;
+            case "5": deletePet(showMenu); break;
+            case "6": exitApp(); break;
+            default: alert("No valid option. Try again."); showMenu();
         }
-    } while (option !== "6");
+    };
+
+    showMenu();
 };
 
 menu();
-
